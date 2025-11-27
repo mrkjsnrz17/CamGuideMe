@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- TITLE -->
+    <title>CamGuideMe</title>
+
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- CSS -->
+    <style>
+        body {
+            background: var(--background);
+            color: var(--text);
+            font-family: "Poppins", Arial, sans-serif;
+            margin: 0;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--main-color);
+            box-shadow: 0 2px 6px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+        } 
+        .back-icon {
+            width: 20px;
+            height: 20px;
+            padding-left: 5px;
+            filter: var(--icon-filter);
+            transition: transform 0.25s ease;
+        }
+        .back-btn:hover .back-icon {
+            transform: scale(1.1);
+        }
+        .title {
+            font-size: 20px;
+            font-weight: 500;
+            padding-left: 5px;
+            margin: 7px;
+            color: var(--title-color);
+        }
+        main {
+            padding: 16px;
+        }
+        .setting-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background: var(--card-bg);
+            border: 1px solid var(--main-color);
+            text-align: left;
+            padding: 12px 48px 12px 16px;
+            margin: 6px 0;
+            font-size: 16px;
+            color: var(--text);
+            border-radius: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px var(--shadow);
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        .setting-item:hover {
+            background: var(--main-color);
+        }
+        .setting-item span {
+            font-size: 16px;
+            color: var(--text);
+        }
+        .setting-item:hover span {
+            color: white;
+        }
+        .setting-item img {
+            position: absolute;
+            right: 16px;
+            width: 17px;
+            height: 17px;
+            filter: invert(63%) sepia(70%) saturate(496%) hue-rotate(162deg) brightness(96%) contrast(95%);
+            transition: transform 0.25s ease, filter 0.25s ease;
+        }
+        .setting-item:hover img {
+            filter: brightness(0) invert(1);
+            transform: scale(1.1);
+        }
+        .rotated {
+            transform: rotate(180deg);
+        }
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 129px;
+            left: 16px;
+            right: 16px;
+            max-width: calc(100% - 32px);
+            background: var(--card-bg, #fff);
+            color: var(--text, #000);
+            border: 1px solid var(--main-color);
+            border-radius: 15px;
+            box-shadow: 0 3px 10px var(--shadow);
+            flex-direction: column;
+            z-index: 100;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .dropdown .option {
+            padding: 12px 40px 12px 16px;
+            font-size: 15px;
+            color: var(--text);
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .dropdown .option img.circle-icon {
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        /* LIGHT THEME */
+[data-theme="light"] .circle-icon {
+    filter: invert(58%) sepia(64%) saturate(3377%) hue-rotate(169deg) brightness(94%) contrast(89%); /* black by default */
+}
+[data-theme="light"] .option:hover .circle-icon {
+    filter: invert(1); /* white on hover */
+}
+
+/* DARK THEME */
+[data-theme="dark"] .circle-icon {
+    filter: invert(58%) sepia(64%) saturate(3377%) hue-rotate(169deg) brightness(94%) contrast(89%); /* white by default */
+}
+[data-theme="dark"] .option:hover .circle-icon {
+    filter: invert(0); /* black on hover */
+}
+        .dropdown .option + .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 12px;
+            right: 12px;
+            height: 1px;
+            background: rgba(81, 195, 224, 0.3);
+        }
+        .dropdown .option:hover {
+            background: var(--main-color);
+            color: white;
+            border-radius: 0;
+        }
+        .dropdown .option:first-child:hover {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .dropdown .option:last-child:hover {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        #themeDropdown {
+            display: none;
+            position: absolute;
+            top: 185px;
+            left: 16px;
+            right: 16px;
+            max-width: calc(100% - 32px);
+            background: var(--card-bg, #fff);
+            color: var(--text, #000);
+            border: 1px solid var(--main-color);
+            border-radius: 15px;
+            box-shadow: 0 3px 10px var(--shadow);
+            flex-direction: column;
+            z-index: 100;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #themeDropdown .option {
+            padding: 12px 40px 12px 16px;
+            font-size: 15px;
+            color: var(--text);
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        #themeDropdown .option img.circle-icon {
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        #themeDropdown .option + .option::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 12px;
+            right: 12px;
+            height: 1px;
+            background: rgba(81, 195, 224, 0.3);
+        }
+        #themeDropdown .option:hover {
+            background: var(--main-color);
+            color: white;
+            border-radius: 0;
+        }
+        #themeDropdown .option:first-child:hover {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        #themeDropdown .option:last-child:hover {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        /* --- LIGHT --- */
+        [data-theme="light"] .setting-item span {
+            color: #1e1e1e;
+        }
+        [data-theme="light"] .setting-item img {
+            filter: invert(63%) sepia(70%) saturate(496%) hue-rotate(162deg) brightness(96%) contrast(95%);
+        }
+        [data-theme="light"] .setting-item:hover span {
+            color: white;
+        }
+        [data-theme="light"] .setting-item:hover img {
+            filter: brightness(0) invert(1);
+        }
+        /* --- DARK --- */
+        [data-theme="dark"] .setting-item span {
+            color: #ffffff;
+        }
+        [data-theme="dark"] .setting-item img {
+            filter: invert(63%) sepia(70%) saturate(496%) hue-rotate(162deg) brightness(96%) contrast(95%);
+        }
+        [data-theme="dark"] .setting-item:hover span {
+            color: #000000;
+        }
+        [data-theme="dark"] .setting-item:hover img {
+            filter: brightness(0);
+        }
+        [data-theme="dark"] .dropdown,
+        [data-theme="dark"] #themeDropdown {
+            background: #1e1e1e;
+            color: #f4f4f4;
+            border-color: rgba(81, 195, 224, 0.3);
+        }
+        [data-theme="dark"] .dropdown .option,
+        [data-theme="dark"] #themeDropdown .option {
+            color: #f4f4f4;
+        }
+        [data-theme="dark"] .dropdown .option:hover,
+        [data-theme="dark"] #themeDropdown .option:hover {
+            background: var(--main-color);
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <img src="assets/images/logo.png" alt="CamGuideMe Logo" class="logo" />
+            <h1>CamGuideMe</h1>
+        </div>
+
+        <!-- NAV MENU -->
+        <nav class="header-menu">
+            <a href="index.html" class="menu-item">Home</a>
+
+            <div class="menu-dropdown">
+                <button class="menu-item dropdown-btn">
+                    Collection 
+                    <img src="assets/icons/arrow-downn.png" class="arrow-icon" alt="Arrow">
+                </button>
+                <div class="dropdown-content">
+                    <a href="favorites.html">Favorites</a>
+                    <a href="visited.html">Visited</a>
+                </div>
+            </div>
+
+            <a href="settings.html" class="menu-item">Settings</a>
+            <a href="about.html" class="menu-item">About</a>
+        </nav>
+    </header>
+
+    <!-- GENERAL & PERSONALIZATION CONTENT -->
+    <main>
+        <!-- LANGUAGE -->
+        <div class="setting-item" id="languageItem">
+            <span>Language</span>
+            <img src="assets/icons/arrow-down.png" alt="Arrow" />
+        </div>
+        <!-- TAGALOG & ENGLISH -->
+        <div class="dropdown" id="languageDropdown">
+            <div class="option"><img class="circle-icon" src="assets/icons/unfilled.png">Filipino</div>
+            <div class="option"><img class="circle-icon" src="assets/icons/unfilled.png">English</div>
+        </div>
+
+        <!-- THEME -->
+        <div class="setting-item" id="themeItem">
+            <span>Theme</span>
+            <img src="assets/icons/arrow-down.png" alt="Arrow" />
+        </div>
+        <!-- LIGHT, DARK & SYSTEM DEFAULT -->
+        <div class="dropdown" id="themeDropdown">
+            <div class="option"><img class="circle-icon" src="assets/icons/unfilled.png">Light</div>
+            <div class="option"><img class="circle-icon" src="assets/icons/unfilled.png">Dark</div>
+            <div class="option"><img class="circle-icon" src="assets/icons/unfilled.png">System</div>
+        </div>
+    </main>
+
+    <!-- JS -->
+    <script>
+        // LANGUAGE FUNCTION
+        const languageItem = document.getElementById('languageItem');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const languageArrow = languageItem.querySelector('img');
+        let isOpen = false;
+
+        // THEME FUNCTION
+        const themeItem = document.getElementById('themeItem');
+        const themeDropdown = document.getElementById('themeDropdown');
+        const themeArrow = themeItem.querySelector('img');
+        let isThemeOpen = false;
+
+        // LANGUAGE DROPDOWN CLICK
+        languageItem.addEventListener('click', () => {
+            isOpen = !isOpen;
+
+            if (isThemeOpen) {
+                isThemeOpen = false;
+                themeDropdown.style.display = 'none';
+                themeArrow.style.transform = 'rotate(0deg)';
+            }
+
+            languageDropdown.style.display = isOpen ? 'flex' : 'none';
+            languageArrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        // THEME DROPDOWN CLICK
+        themeItem.addEventListener('click', () => {
+            isThemeOpen = !isThemeOpen;
+
+            if (isOpen) {
+                isOpen = false;
+                languageDropdown.style.display = 'none';
+                languageArrow.style.transform = 'rotate(0deg)';
+            }
+
+            themeDropdown.style.display = isThemeOpen ? 'flex' : 'none';
+            themeArrow.style.transform = isThemeOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        });
+
+        // --- LANGUAGE ICONS ---
+        const languageOptions = languageDropdown.querySelectorAll('.option');
+        const savedLanguage = localStorage.getItem('language') || 'Filipino';
+
+        function updateLanguageIcons() {
+            languageOptions.forEach(option => {
+                const icon = option.querySelector('.circle-icon');
+                icon.src = option.textContent.trim() === savedLanguage
+                    ? 'assets/icons/filled.png'
+                    : 'assets/icons/unfilled.png';
+            });
+        }
+        updateLanguageIcons();
+
+        languageOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const choice = option.textContent.trim();
+                localStorage.setItem('language', choice);
+                updateLanguageIcons();
+                languageDropdown.style.display = 'none';
+                languageArrow.style.transform = 'rotate(0deg)';
+                isOpen = false;
+            });
+        });
+
+        // --- THEME ICONS ---
+        const themeOptions = themeDropdown.querySelectorAll('.option');
+
+        function updateThemeIcons() {
+            themeOptions.forEach(option => {
+                const icon = option.querySelector('.circle-icon');
+                const currentTheme = (localStorage.getItem('theme') || 'system');
+                icon.src = option.textContent.toLowerCase() === currentTheme
+                    ? 'assets/icons/filled.png'
+                    : 'assets/icons/unfilled.png';
+            });
+        }
+        updateThemeIcons();
+
+        // THEME FUNCTION - LIGHT, DARK, SYSTEM DEFAULT
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            if (theme === 'light') {
+                document.documentElement.style.setProperty('--background', '#f9f9fb');
+                document.documentElement.style.setProperty('--text', '#1e1e1e');
+                document.documentElement.style.setProperty('--card-bg', '#ffffff');
+                document.documentElement.style.setProperty('--subtext', '#555');
+                document.documentElement.style.setProperty('--shadow', 'rgba(0,0,0,0.1)');
+                document.documentElement.style.setProperty('--icon-filter', 'brightness(0) invert(1)');
+                document.documentElement.style.setProperty('--title-color', '#ffffff');
+                localStorage.setItem('theme', 'light');
+            } else if (theme === 'dark') {
+                document.documentElement.style.setProperty('--background', '#121212');
+                document.documentElement.style.setProperty('--text', '#f4f4f4');
+                document.documentElement.style.setProperty('--card-bg', '#1e1e1e');
+                document.documentElement.style.setProperty('--subtext', '#ccc');
+                document.documentElement.style.setProperty('--shadow', 'rgba(0,0,0,0.6)');
+                document.documentElement.style.setProperty('--icon-filter', 'invert(0)');
+                document.documentElement.style.setProperty('--title-color', '#1e1e1e');
+                localStorage.setItem('theme', 'dark');
+            } else if (theme === 'system') {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    applyTheme('dark');
+                } else {
+                    applyTheme('light');
+                }
+                localStorage.setItem('theme', 'system');
+            }
+            updateThemeIcons();
+        }
+
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const selectedTheme = option.textContent.toLowerCase();
+                applyTheme(selectedTheme);
+                themeDropdown.style.display = 'none';
+                themeArrow.style.transform = 'rotate(0deg)';
+                isThemeOpen = false;
+            });
+        });
+
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        applyTheme(savedTheme);
+
+        if (savedTheme === 'system' && window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                applyTheme('system');
+            });
+        }
+    </script>
+</body>
+</html>

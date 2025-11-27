@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TITLE -->
+    <title>CamGuideMe</title>
+    
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- HEADER -->
+       <header>
+    <div class="header-content">
+        <img src="assets/images/logo.png" alt="CamGuideMe Logo" class="logo" />
+        <h1>CamGuideMe</h1>
+    </div>
+
+    <!-- NAV MENU -->
+    <nav class="header-menu">
+    <a href="main.html" class="menu-item">Home</a>
+
+    <div class="menu-dropdown">
+        <button class="menu-item dropdown-btn">
+            Collection 
+            <img src="assets/icons/arrow-downn.png" class="arrow-icon" alt="Arrow">
+        </button>
+        <div class="dropdown-content">
+            <a href="favorites.html">Favorites</a>
+            <a href="visited.html">Visited</a>
+        </div>
+    </div>
+
+    <a href="settings.html" class="menu-item">Settings</a>
+    <a href="about.html" class="menu-item">About</a>
+</nav>
+
+</header>
+
+<!-- SEARCH BAR ROW -->
+<div class="search-bar-row">
+    <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="Search Islands...">
+        <button class="clear-btn" id="clearBtn">
+            <img src="assets/icons/close.png" alt="Clear">
+        </button>
+    </div>
+
+    <!-- Filter button -->
+<div class="filter-dropdown">
+    <button class="filter-button">
+        <img src="assets/icons/filter.png" alt="Filter">
+        <span>Filters</span>
+    </button>
+
+    <div class="filter-menu">
+    <div class="filter-title">Sort By:</div>
+    <a href="#" data-sort="name-asc">
+        Name from A to Z
+        <img class="filter-circle" src="assets/icons/unfilled.png" alt="Circle">
+    </a>
+    <a href="#" data-sort="name-desc">
+        Name from Z to A
+        <img class="filter-circle" src="assets/icons/unfilled.png" alt="Circle">
+    </a>
+    <a href="#" data-sort="location">
+        Municipality
+        <img class="filter-circle" src="assets/icons/unfilled.png" alt="Circle">
+    </a>
+    <a href="#" data-sort="nearby">
+        Nearest Island
+        <img class="filter-circle" src="assets/icons/unfilled.png" alt="Circle">
+    </a>
+</div>
+
+</div>
+
+</div>
+
+
+
+
+        <!-- ISLAND CARD -->
+        <section id="islandContainer" class="list-view"></section>
+    </main>
+    
+    <!-- JS -->
+    <script src="island.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
